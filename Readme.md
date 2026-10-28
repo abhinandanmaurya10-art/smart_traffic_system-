@@ -45,6 +45,18 @@ Run these from the repository root:
 
 For production, build the client with `npm run build`, set the environment variables, and run `npm start` from the root. The API serves the built client when `client/dist` exists.
 
+## Deploy to Vercel
+
+The repository includes Vercel configuration for hosting the React build and routing API requests to an Express serverless function.
+
+1. Push this repository to GitHub and create a MongoDB Atlas cluster. In Atlas, create a database user and allow network access for your Vercel deployment. Use a strong password and keep the connection string private.
+2. Import the GitHub repository into Vercel. Use the repository root (`.`) as the project root and keep the configured build command `npm run build` and output directory `client/dist`.
+3. In the Vercel project settings, add the environment variable `MONGODB_URI` with your Atlas connection string. Add it for Production and Preview deployments if both should connect to the database. Do not commit the value to Git.
+4. Deploy. Vercel creates a public deployment URL. The React app and `/api` endpoints are served from the same domain.
+5. After deployment, open `<your-vercel-url>/api/health`. A healthy deployment returns `"database": "connected"`.
+
+The local Vite development proxy continues to forward `/api` requests to the local Express server. Local development still requires MongoDB and the `server/.env` file.
+
 ## Simulation behavior
 
 - Adaptive mode scores each road using vehicle count, waiting cycles, and pedestrian requests. Emergency flags take precedence; roads beyond the starvation threshold are served before ordinary score comparisons.
